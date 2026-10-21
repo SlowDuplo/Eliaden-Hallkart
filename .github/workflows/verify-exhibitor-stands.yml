@@ -1,0 +1,45 @@
+name: Verify PDF and API booth data
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "pdf/*.pdf"
+      - "scripts/process_hall_map.py"
+      - "scripts/verify_exhibitor_stands.py"
+      - ".github/workflows/verify-exhibitor-stands.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF processing dependency
+        run: python -m pip install -r requirements.txt
+
+      - name: Compare PDF table and API stand numbers
+        shell: bash
+        env:
+          EXHIBITOR_API_URL: https://api.venyou.no/v1/public/widgets/exhibitor-widget/553
+        run: |
+          shopt -s nullglob
+          pdf_files=(pdf/*.pdf)
+          if (( ${#pdf_files[@]} != 1 )); then
+            printf 'Expected exactly one PDF directly in pdf/, found %s.\n' "${#pdf_files[@]}" >&2
+            exit 1
+          fi
+          python scripts/verify_exhibitor_stands.py \
+            --pdf "${pdf_files[0]}" \
+            --api-url "$EXHIBITOR_API_URL"

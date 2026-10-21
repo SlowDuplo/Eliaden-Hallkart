@@ -97,6 +97,31 @@ For a new event, change `EXHIBITOR_API_URL` in
 before pushing the PDF. The workflow passes these values to the processor so
 event dates and venue are retained in the generated booth data.
 
+## Verify PDF and API booth numbers
+
+Run the comparison locally from the repository root:
+
+```sh
+python scripts/verify_exhibitor_stands.py \
+  --pdf "pdf/Eliaden-26-Hall-B-C-D_21.pdf" \
+  --api-url "https://api.venyou.no/v1/public/widgets/exhibitor-widget/553"
+```
+
+The checker compares unique stand numbers in the PDF's exhibitor tables with
+the API's `stands[].standnumber` values. It reports stands found only in either
+source, API records without a valid stand, and repeated API assignments.
+Repeated assignments are informational because several exhibitors can share a
+stand; set differences and exhibitors without a stand make the check fail.
+
+The separate **Verify PDF and API booth data** workflow runs when the PDF or
+checker code changes on `main`. To run it on demand, open **Actions → Verify
+PDF and API booth data → Run workflow**, select `main`, and start the run. Keep
+exactly one PDF directly in `pdf/`. The action summary shows the comparison
+results, and the workflow fails when the sources differ. For a new event,
+update `EXHIBITOR_API_URL` in both
+`.github/workflows/process-hall-map.yml` and
+`.github/workflows/verify-exhibitor-stands.yml`.
+
 ## Edit the data by hand
 
 You can edit `data/exhibitors.json` directly when only exhibitor names, booth

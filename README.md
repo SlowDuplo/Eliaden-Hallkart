@@ -2,9 +2,10 @@
 
 A static, searchable hall map for Eliaden 2026. The exhibitor directory is
 compiled from `Eliaden-26-Hall-B-C-D_21.pdf`; the floor-plan image is cropped
-from the same PDF. The PDF lists 254 distinct booth numbers. Some listed booths
-do not have an individually identifiable label on the drawing, so they remain
-searchable in the directory without a guessed map position.
+from the same PDF and includes halls A, B, C, D and U. The exhibitor table lists
+254 distinct booth numbers. Some listed booths do not have an individually
+identifiable label on the drawing, so they remain searchable in the directory
+without a guessed map position.
 
 ## Run locally
 

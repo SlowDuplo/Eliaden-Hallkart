@@ -1,5 +1,6 @@
 const halls = [
   { id: "all", label: "All halls" },
+  { id: "A", label: "Hall A" },
   { id: "B", label: "Hall B" },
   { id: "C", label: "Hall C" },
   { id: "D", label: "Hall D" },

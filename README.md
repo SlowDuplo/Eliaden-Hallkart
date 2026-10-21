@@ -1,9 +1,10 @@
 # Reusable hall map
 
-This static web app reads its event details, halls, exhibitors, booth numbers
-and map positions from `data/exhibitors.json`. It loads the floor-plan image
-from the path in that file (normally `assets/hall-map.png`) and sizes the map
-from the image itself. Updating an event does not require editing the app code.
+This static web app reads event details, halls, booth numbers and map positions
+from `data/exhibitors.json`. Exhibitor names, profiles, categories, website
+links and logos are read from `data/exhibitor-profiles.json`. It loads the
+floor-plan image from the path in the booth data (normally
+`assets/hall-map.png`) and sizes the map from the image itself.
 
 ## Process a new PDF
 
@@ -47,6 +48,48 @@ The crop must include every hall and booth label to be shown. The script writes
 map positions as normalized `x`/`y` values for the generated image, so process
 the PDF again whenever booth positions change.
 
+Fetch the matching exhibitor profiles separately so the directory can show
+company information and logos:
+
+```sh
+python scripts/fetch_exhibitor_profiles.py \
+  --api-url "https://api.venyou.no/v1/public/widgets/exhibitor-widget/553"
+```
+
+This writes `data/exhibitor-profiles.json`. Update the API URL for a new event;
+the GitHub Actions workflow performs both processing steps automatically.
+
+## Generate from GitHub Actions
+
+The **Process hall map PDF** workflow runs on pushes to `main` that add or
+change a PDF directly in `pdf/`. Keep exactly one `.pdf` file in that folder;
+replace the previous file when preparing a new year. For example:
+
+```sh
+mkdir -p pdf
+cp "/path/to/new-hall-plan.pdf" "pdf/Eliaden-27-Hall-Plan.pdf"
+# If this is a new event, update EXHIBITOR_API_URL in the workflow first.
+git add pdf/Eliaden-27-Hall-Plan.pdf .github/workflows/process-hall-map.yml
+git commit -m "Update hall map source PDF"
+git push origin main
+```
+
+After the push, open the repository's **Actions** tab and select
+**Process hall map PDF** to follow the run. The workflow installs requirements,
+fetches exhibitor profiles and logos from the configured public API, processes
+the PDF, then commits changed `assets/hall-map.png`, `data/exhibitors.json`
+and `data/exhibitor-profiles.json` back to `main` using the `turbolego` Git
+identity. It does not create a second commit when generated files are unchanged.
+
+To run it again without changing the PDF, go to **Actions → Process hall map
+PDF → Run workflow**, choose the `main` branch, and start the run. The same
+single-PDF requirement applies. If processing fails, check that the PDF is
+directly inside `pdf/`, that there is only one PDF there, and that the map crop
+can be detected; use the manual script command above for page or crop overrides.
+For a new event, change `EXHIBITOR_API_URL` in
+`.github/workflows/process-hall-map.yml` to the new widget endpoint before
+pushing the PDF. Event name and year are inferred from the PDF filename.
+
 ## Edit the data by hand
 
 You can edit `data/exhibitors.json` directly when only exhibitor names, booth
@@ -58,6 +101,8 @@ numbers or event details change. Keep the existing JSON structure:
   document how it was generated.
 - Each item in `booths` has a `stand`, `hall`, an `exhibitors` array and a
   `locations` array.
+- `data/exhibitor-profiles.json` is generated from the public exhibitor API
+  and provides logos, descriptions, categories and website/social links.
 
 For example:
 

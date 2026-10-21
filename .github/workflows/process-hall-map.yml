@@ -39,6 +39,11 @@ jobs:
 
       - name: Generate map and exhibitor data
         shell: bash
+        env:
+          HALL_MAP_EVENT_NAME: Eliaden
+          HALL_MAP_YEAR: "2026"
+          HALL_MAP_DATES: 14–16 October 2026
+          HALL_MAP_VENUE: Nova Spektrum
         run: |
           shopt -s nullglob
           pdf_files=(pdf/*.pdf)
@@ -46,7 +51,13 @@ jobs:
             printf 'Expected exactly one PDF directly in pdf/, found %s.\n' "${#pdf_files[@]}" >&2
             exit 1
           fi
-          python scripts/process_hall_map.py --pdf "${pdf_files[0]}" --output-dir .
+          python scripts/process_hall_map.py \
+            --pdf "${pdf_files[0]}" \
+            --output-dir . \
+            --event-name "$HALL_MAP_EVENT_NAME" \
+            --year "$HALL_MAP_YEAR" \
+            --dates "$HALL_MAP_DATES" \
+            --venue "$HALL_MAP_VENUE"
 
       - name: Commit generated files
         run: |

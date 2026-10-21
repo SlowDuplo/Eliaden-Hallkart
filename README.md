@@ -46,7 +46,8 @@ python scripts/process_hall_map.py \
 
 The crop must include every hall and booth label to be shown. The script writes
 map positions as normalized `x`/`y` values for the generated image, so process
-the PDF again whenever booth positions change.
+the PDF again whenever booth positions change. Map labels split across two
+lines, such as `D01-` followed by `23`, are joined automatically.
 
 Fetch the matching exhibitor profiles separately so the directory can show
 company information and logos:
@@ -68,11 +69,15 @@ replace the previous file when preparing a new year. For example:
 ```sh
 mkdir -p pdf
 cp "/path/to/new-hall-plan.pdf" "pdf/Eliaden-27-Hall-Plan.pdf"
-# If this is a new event, update EXHIBITOR_API_URL in the workflow first.
-git add pdf/Eliaden-27-Hall-Plan.pdf .github/workflows/process-hall-map.yml
+# For a new event, update EXHIBITOR_API_URL and the HALL_MAP_* values first.
+git add -A
+git status --short
 git commit -m "Update hall map source PDF"
 git push origin main
 ```
+
+Review `git status --short` before committing to make sure all intended PDF,
+workflow, code, and documentation changes are included.
 
 After the push, open the repository's **Actions** tab and select
 **Process hall map PDF** to follow the run. The workflow installs requirements,
@@ -87,8 +92,10 @@ single-PDF requirement applies. If processing fails, check that the PDF is
 directly inside `pdf/`, that there is only one PDF there, and that the map crop
 can be detected; use the manual script command above for page or crop overrides.
 For a new event, change `EXHIBITOR_API_URL` in
-`.github/workflows/process-hall-map.yml` to the new widget endpoint before
-pushing the PDF. Event name and year are inferred from the PDF filename.
+`.github/workflows/process-hall-map.yml` to the new widget endpoint and update
+`HALL_MAP_EVENT_NAME`, `HALL_MAP_YEAR`, `HALL_MAP_DATES` and `HALL_MAP_VENUE`
+before pushing the PDF. The workflow passes these values to the processor so
+event dates and venue are retained in the generated booth data.
 
 ## Edit the data by hand
 

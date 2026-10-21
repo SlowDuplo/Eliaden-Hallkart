@@ -58,6 +58,59 @@ def hall_for(stand: str) -> str:
     return "U" if stand.startswith("UR-") else stand[0]
 
 
+def split_map_code_words(
+    words: list[tuple], crop: pymupdf.Rect, page: pymupdf.Page
+) -> list[tuple]:
+    prefix_pattern = re.compile(r"^[A-Z]\d{1,2}-$")
+    suffix_pattern = re.compile(r"^\d{1,2}$")
+    map_words = []
+    for word in words:
+        center_x = (word[0] + word[2]) / 2
+        center_y = (word[1] + word[3]) / 2
+        if crop.x0 <= center_x <= crop.x1 and crop.y0 <= center_y <= crop.y1:
+            map_words.append(word)
+
+    combined_words = []
+    used_suffixes = set()
+    for prefix in map_words:
+        if not prefix_pattern.fullmatch(prefix[4]):
+            continue
+        prefix_center_x = (prefix[0] + prefix[2]) / 2
+        prefix_center_y = (prefix[1] + prefix[3]) / 2
+        candidates = []
+        for index, suffix in enumerate(map_words):
+            if index in used_suffixes or not suffix_pattern.fullmatch(suffix[4]):
+                continue
+            suffix_center_x = (suffix[0] + suffix[2]) / 2
+            suffix_center_y = (suffix[1] + suffix[3]) / 2
+            max_line_height = max(prefix[3] - prefix[1], suffix[3] - suffix[1])
+            if (
+                suffix_center_y > prefix_center_y
+                and suffix_center_y - prefix_center_y <= max_line_height * 1.5
+                and abs(suffix_center_x - prefix_center_x) <= page.rect.width * 0.006
+            ):
+                candidates.append((suffix_center_y - prefix_center_y, index, suffix))
+
+        if not candidates:
+            continue
+        _, suffix_index, suffix = min(candidates, key=lambda candidate: candidate[0])
+        stand = f"{prefix[4]}{suffix[4]}"
+        if not BOOTH_CODE.fullmatch(stand):
+            continue
+        used_suffixes.add(suffix_index)
+        combined_words.append(
+            (
+                min(prefix[0], suffix[0]),
+                min(prefix[1], suffix[1]),
+                max(prefix[2], suffix[2]),
+                max(prefix[3], suffix[3]),
+                stand,
+                *prefix[5:],
+            )
+        )
+    return combined_words
+
+
 def text_words_on_row(
     words: list[tuple], code_word: tuple, column_left: float, tolerance: float
 ) -> str:
@@ -84,6 +137,7 @@ def extract_booths(page: pymupdf.Page, crop: pymupdf.Rect) -> list[dict]:
 
     table_words = [word for word in code_words if not inside_crop(word)]
     map_words = [word for word in code_words if inside_crop(word)]
+    map_words.extend(split_map_code_words(words, crop, page))
     if not table_words:
         raise ValueError("No exhibitor-table booth numbers were found outside the map crop.")
     if not map_words:

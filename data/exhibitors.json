@@ -140,7 +140,12 @@
       "exhibitors": [
         "Telenor"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.904544
+        }
+      ]
     },
     {
       "stand": "B01-07",
@@ -148,7 +153,12 @@
       "exhibitors": [
         "Foss"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.823038
+        }
+      ]
     },
     {
       "stand": "B01-08",
@@ -169,7 +179,12 @@
       "exhibitors": [
         "Lyskultur"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.769358
+        }
+      ]
     },
     {
       "stand": "B01-11",
@@ -177,7 +192,12 @@
       "exhibitors": [
         "CABICON A/S"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.712126
+        }
+      ]
     },
     {
       "stand": "B01-12",
@@ -198,7 +218,12 @@
       "exhibitors": [
         "Aptly AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.621147
+        }
+      ]
     },
     {
       "stand": "B01-16",
@@ -219,7 +244,12 @@
       "exhibitors": [
         "Ningbo Fengtai"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.184651,
+          "y": 0.5874
+        }
+      ]
     },
     {
       "stand": "B01-18",
@@ -240,7 +270,12 @@
       "exhibitors": [
         "Knutwall Marking Systems"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.184651,
+          "y": 0.546845
+        }
+      ]
     },
     {
       "stand": "B01-20",
@@ -261,7 +296,12 @@
       "exhibitors": [
         "RENAS AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.499776
+        }
+      ]
     },
     {
       "stand": "B01-24",
@@ -295,7 +335,12 @@
       "exhibitors": [
         "Partex Marking Systems"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.419652
+        }
+      ]
     },
     {
       "stand": "B01-28",
@@ -316,7 +361,12 @@
       "exhibitors": [
         "Safetytest GMBH"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.379195
+        }
+      ]
     },
     {
       "stand": "B01-30",
@@ -324,7 +374,12 @@
       "exhibitors": [
         "JACOBSEN ELEKTRO"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.213997,
+          "y": 0.368182
+        }
+      ]
     },
     {
       "stand": "B01-31",
@@ -332,7 +387,12 @@
       "exhibitors": [
         "Tykoflex"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.345843
+        }
+      ]
     },
     {
       "stand": "B01-32",
@@ -353,7 +413,12 @@
       "exhibitors": [
         "SUPERCHARGE AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.182981,
+          "y": 0.305583
+        }
+      ]
     },
     {
       "stand": "B01-34",
@@ -361,7 +426,12 @@
       "exhibitors": [
         "Fagskolen i Nord"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.213997,
+          "y": 0.3475
+        }
+      ]
     },
     {
       "stand": "B01-36",
@@ -750,7 +820,12 @@
       "exhibitors": [
         "Satema"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.803401
+        }
+      ]
     },
     {
       "stand": "B04-11",
@@ -771,7 +846,12 @@
       "exhibitors": [
         "Evna AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.72821
+        }
+      ]
     },
     {
       "stand": "B04-13",
@@ -792,7 +872,12 @@
       "exhibitors": [
         "Zhongshan Qisen Lighting Co. Ltd"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.628351
+        }
+      ]
     },
     {
       "stand": "B04-15",
@@ -813,7 +898,12 @@
       "exhibitors": [
         "MS Belysning AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.59115
+        }
+      ]
     },
     {
       "stand": "B04-17",
@@ -834,7 +924,12 @@
       "exhibitors": [
         "Scanmast AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.550891
+        }
+      ]
     },
     {
       "stand": "B04-19",
@@ -855,7 +950,12 @@
       "exhibitors": [
         "Rheidon Tech"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.513591
+        }
+      ]
     },
     {
       "stand": "B04-21",
@@ -876,7 +976,12 @@
       "exhibitors": [
         "RS Components"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.339481,
+          "y": 0.421033
+        }
+      ]
     },
     {
       "stand": "B04-25",
@@ -936,7 +1041,12 @@
       "exhibitors": [
         "REKVISITT AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.416889
+        }
+      ]
     },
     {
       "stand": "B05-24",
@@ -944,7 +1054,12 @@
       "exhibitors": [
         "El-Tube"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.356586,
+          "y": 0.383536
+        }
+      ]
     },
     {
       "stand": "B05-26",
@@ -952,7 +1067,12 @@
       "exhibitors": [
         "Bryggestrøm AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.356586,
+          "y": 0.363407
+        }
+      ]
     },
     {
       "stand": "B05-28",
@@ -960,7 +1080,12 @@
       "exhibitors": [
         "DACON AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.356586,
+          "y": 0.333094
+        }
+      ]
     },
     {
       "stand": "B05-29",
@@ -994,7 +1119,12 @@
       "exhibitors": [
         "AS Energofirma “JAUDA“"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.358098,
+          "y": 0.299031
+        }
+      ]
     },
     {
       "stand": "B05-33",
@@ -1052,7 +1182,12 @@
       "exhibitors": [
         "Primatec"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.487535,
+          "y": 0.930989
+        }
+      ]
     },
     {
       "stand": "C01-06",
@@ -1103,7 +1238,12 @@
       "exhibitors": [
         "SST Enclosures AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.525661,
+          "y": 0.777173
+        }
+      ]
     },
     {
       "stand": "C01-13",
@@ -1150,7 +1290,12 @@
       "exhibitors": [
         "COBITEK AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.507558,
+          "y": 0.629189
+        }
+      ]
     },
     {
       "stand": "C01-21",
@@ -1158,7 +1303,12 @@
       "exhibitors": [
         "CN ROOD NORDICS NORWAY"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.488008,
+          "y": 0.627462
+        }
+      ]
     },
     {
       "stand": "C01-22",
@@ -1166,7 +1316,12 @@
       "exhibitors": [
         "MARECHAL ELECTRIC S.A.S."
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.516976,
+          "y": 0.629189
+        }
+      ]
     },
     {
       "stand": "C01-25",
@@ -1174,7 +1329,12 @@
       "exhibitors": [
         "LAKUDA NUF"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.488008,
+          "y": 0.521091
+        }
+      ]
     },
     {
       "stand": "C01-26",
@@ -1195,7 +1355,12 @@
       "exhibitors": [
         "DALUX NORWAY"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.518237,
+          "y": 0.468398
+        }
+      ]
     },
     {
       "stand": "C01-28",
@@ -1203,7 +1368,12 @@
       "exhibitors": [
         "ERNSTRÖM ELECTRO"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.508819,
+          "y": 0.468398
+        }
+      ]
     },
     {
       "stand": "C01-29",
@@ -1224,7 +1394,12 @@
       "exhibitors": [
         "2N Telekomunikace, a.s."
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.508819,
+          "y": 0.447084
+        }
+      ]
     },
     {
       "stand": "C01-31",
@@ -1232,7 +1407,12 @@
       "exhibitors": [
         "Vision Technology Grid AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.487535,
+          "y": 0.467411
+        }
+      ]
     },
     {
       "stand": "C01-32",
@@ -1241,6 +1421,10 @@
         "GEZE NORGE AS"
       ],
       "locations": [
+        {
+          "x": 0.518237,
+          "y": 0.447084
+        },
         {
           "x": 0.559974,
           "y": 0.471752
@@ -1270,7 +1454,12 @@
       "exhibitors": [
         "Tripletex"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.488008,
+          "y": 0.400706
+        }
+      ]
     },
     {
       "stand": "C01-36",
@@ -1304,7 +1493,12 @@
       "exhibitors": [
         "Divisoft AB"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.497425,
+          "y": 0.363999
+        }
+      ]
     },
     {
       "stand": "C01-41",
@@ -1312,7 +1506,12 @@
       "exhibitors": [
         "Fagerberg AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.497425,
+          "y": 0.339626
+        }
+      ]
     },
     {
       "stand": "C01-45",
@@ -1369,7 +1568,12 @@
       "exhibitors": [
         "PCSCHEMATIC AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.535478,
+          "y": 0.777173
+        }
+      ]
     },
     {
       "stand": "C02-19",
@@ -1932,7 +2136,12 @@
       "exhibitors": [
         "Trainor Elsikkerhet"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.823038
+        }
+      ]
     },
     {
       "stand": "C05-16",
@@ -1940,7 +2149,12 @@
       "exhibitors": [
         "BOSTIK AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.782679
+        }
+      ]
     },
     {
       "stand": "C05-18",
@@ -1948,7 +2162,12 @@
       "exhibitors": [
         "Gifas-Electric GmbH"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.748538
+        }
+      ]
     },
     {
       "stand": "C05-22",
@@ -1956,7 +2175,12 @@
       "exhibitors": [
         "GRAVOGRAPH NORGE AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.708081
+        }
+      ]
     },
     {
       "stand": "C05-25",
@@ -1977,7 +2201,12 @@
       "exhibitors": [
         "Leteng"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.542108
+        }
+      ]
     },
     {
       "stand": "C05-27",
@@ -1998,7 +2227,12 @@
       "exhibitors": [
         "perific"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.495336
+        }
+      ]
     },
     {
       "stand": "C05-30",
@@ -2017,12 +2251,36 @@
       "locations": []
     },
     {
+      "stand": "C05-34",
+      "hall": "C",
+      "exhibitors": [],
+      "locations": [
+        {
+          "x": 0.6804,
+          "y": 0.42123
+        },
+        {
+          "x": 0.6804,
+          "y": 0.441518
+        },
+        {
+          "x": 0.6804,
+          "y": 0.461806
+        }
+      ]
+    },
+    {
       "stand": "C05-37",
       "hall": "C",
       "exhibitors": [
         "ELEFUN AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.654556,
+          "y": 0.368893
+        }
+      ]
     },
     {
       "stand": "C05-38",
@@ -2030,7 +2288,34 @@
       "exhibitors": [
         "FIRESAFE AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.394312
+        }
+      ]
+    },
+    {
+      "stand": "C05-39",
+      "hall": "C",
+      "exhibitors": [],
+      "locations": [
+        {
+          "x": 0.654556,
+          "y": 0.345408
+        }
+      ]
+    },
+    {
+      "stand": "C05-41",
+      "hall": "C",
+      "exhibitors": [],
+      "locations": [
+        {
+          "x": 0.654556,
+          "y": 0.324095
+        }
+      ]
     },
     {
       "stand": "C05-42",
@@ -2038,7 +2323,12 @@
       "exhibitors": [
         "Bravida Norge Fire & Security"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.681912,
+          "y": 0.350618
+        }
+      ]
     },
     {
       "stand": "C05-44",
@@ -2085,7 +2375,12 @@
       "exhibitors": [
         "Autronica Fire and Security AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.716739,
+          "y": 0.919977
+        }
+      ]
     },
     {
       "stand": "D01-06",
@@ -2114,7 +2409,12 @@
       "exhibitors": [
         "Wibe Group"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.716739,
+          "y": 0.749968
+        }
+      ]
     },
     {
       "stand": "D01-12",
@@ -2162,7 +2462,12 @@
       "exhibitors": [
         "VARMECOMFORT AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.716739,
+          "y": 0.493067
+        }
+      ]
     },
     {
       "stand": "D01-23",
@@ -2170,7 +2475,12 @@
       "exhibitors": [
         "Hallingplast AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.716739,
+          "y": 0.371281
+        }
+      ]
     },
     {
       "stand": "D01-24",
@@ -2771,7 +3081,12 @@
       "exhibitors": [
         "ELARIS ELEKTROTAVLER AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.890078,
+          "y": 0.260234
+        }
+      ]
     },
     {
       "stand": "D04-34",
@@ -2842,7 +3157,12 @@
       "exhibitors": [
         "Relekta"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.976032,
+          "y": 0.906833
+        }
+      ]
     },
     {
       "stand": "D05-18",
@@ -2850,7 +3170,12 @@
       "exhibitors": [
         "VOLUTION NORGE AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.976032,
+          "y": 0.823502
+        }
+      ]
     },
     {
       "stand": "D05-20",
@@ -2858,7 +3183,12 @@
       "exhibitors": [
         "Ingeniørfirma Abiko Norsk AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.976032,
+          "y": 0.776157
+        }
+      ]
     },
     {
       "stand": "D05-26",
@@ -2879,7 +3209,12 @@
       "exhibitors": [
         "Fibergrossisten eMCOM AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.976032,
+          "y": 0.642116
+        }
+      ]
     },
     {
       "stand": "D05-32",
@@ -2887,7 +3222,12 @@
       "exhibitors": [
         "2Home"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.972666,
+          "y": 0.537549
+        }
+      ]
     },
     {
       "stand": "D05-36",
@@ -2895,7 +3235,12 @@
       "exhibitors": [
         "ELEKTRIKER PÅ HJUL AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.972666,
+          "y": 0.507158
+        }
+      ]
     },
     {
       "stand": "D05-38",
@@ -2903,7 +3248,12 @@
       "exhibitors": [
         "ENPHASE ENERGY NL BV"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.972666,
+          "y": 0.470174
+        }
+      ]
     },
     {
       "stand": "D05-42",
@@ -2922,7 +3272,12 @@
       "exhibitors": [
         "TELEMARK FYLKESKOMMUNE"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.943271,
+          "y": 0.399088
+        }
+      ]
     },
     {
       "stand": "D05-46",
@@ -2930,7 +3285,12 @@
       "exhibitors": [
         "EFP NORDIC AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.943271,
+          "y": 0.365735
+        }
+      ]
     },
     {
       "stand": "D05-48",
@@ -2938,7 +3298,12 @@
       "exhibitors": [
         "WLK NORWAY AS"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.943271,
+          "y": 0.33258
+        }
+      ]
     },
     {
       "stand": "D05-50",
@@ -2972,7 +3337,12 @@
       "exhibitors": [
         "Airam Electric OY Ab"
       ],
-      "locations": []
+      "locations": [
+        {
+          "x": 0.933825,
+          "y": 0.215156
+        }
+      ]
     },
     {
       "stand": "D05-58",

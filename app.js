@@ -450,7 +450,7 @@ function selectExhibitor(id) {
 }
 
 function setZoom(nextScale) {
-  scale = Math.max(1, Math.min(2.5, nextScale));
+  scale = Math.max(1, Math.min(5, nextScale));
   mapCanvas.style.width = `${scale * 100}%`;
   if (scale === 1) {
     mapWindow.scrollTo({ top: 0, left: 0, behavior: "smooth" });

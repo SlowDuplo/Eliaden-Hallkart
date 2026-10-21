@@ -111,9 +111,6 @@ function updateEventDetails(data) {
   document.querySelector("#event-year").hidden = !year;
   document.querySelector("#event-details").textContent = eventDetails;
   document.querySelector("#event-details").hidden = !eventDetails;
-  document.querySelector("#footer-event-name").textContent = name;
-  document.querySelector("#footer-event-year").textContent = year;
-  document.querySelector("#footer-event-year").hidden = !year;
   document.querySelector(".map-app").setAttribute("aria-label", `Interactive ${title} hall map`);
   mapArtwork.alt = `${title} floor plan showing ${hallNames.join(", ") || "the exhibition halls"}`;
 }

@@ -135,7 +135,8 @@ numbers or event details change. Keep the existing JSON structure:
 - `map.image` is the artwork path. `map.crop`, `map.page` and `map.image_size`
   document how it was generated.
 - Each item in `booths` has a `stand`, `hall`, an `exhibitors` array and a
-  `locations` array.
+  `locations` array. Each mapped location includes normalized booth `geometry`
+  with its bounds and polygon points, used to highlight the booth itself.
 - `data/exhibitor-profiles.json` is generated from the public exhibitor API
   and provides logos, descriptions, categories and website/social links.
 
@@ -146,16 +147,27 @@ For example:
   "stand": "B01-01",
   "hall": "B",
   "exhibitors": ["Example Exhibitor"],
-  "locations": [{ "x": 0.25, "y": 0.96 }]
+  "locations": [{
+    "x": 0.25,
+    "y": 0.96,
+    "geometry": {
+      "x": 0.23,
+      "y": 0.94,
+      "width": 0.04,
+      "height": 0.04,
+      "points": [[0, 0], [1, 0], [1, 1], [0, 1]]
+    }
+  }]
 }
 ```
 
 `locations` use proportions from the top-left corner of the image (`0` to `1`),
-not PDF coordinates or pixels. A booth can have multiple locations. Use an
-empty array when its position is not known; the booth remains searchable but
-the map marker is not shown. Add a hall to `halls` when adding booths in a hall
-that is not already listed. The app discovers hall filters and event branding
-from the JSON.
+not PDF coordinates or pixels. The geometry bounds are relative to the image;
+its polygon points are relative to those bounds. A booth can have multiple
+locations. Use an empty array when its position is not known; the booth remains
+searchable but is not highlighted on the map. Add a hall to `halls` when adding
+booths in a hall that is not already listed. The app discovers hall filters and
+event branding from the JSON.
 
 ## Replace the map artwork
 
@@ -185,3 +197,10 @@ dismiss selected exhibitor details. If you processed the PDF manually, commit
 the generated image and JSON together. GitHub Pages uses the repository root:
 in **Settings → Pages**, choose **Deploy from a branch**, select `main` and
 `/(root)`, then save.
+
+## Share a booth
+
+Select a booth from the map or exhibitor list to update the page URL. To open a
+booth directly, use either a query parameter such as
+`?booth=D02-37` (also accepts `?boothId=D02-37`) or the hall-map-style fragment
+`#D02-37`. Share the resulting URL to open the same booth selection.

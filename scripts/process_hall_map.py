@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import statistics
 from collections import defaultdict
@@ -126,8 +127,118 @@ def text_words_on_row(
     return " ".join(word[4] for word in sorted(row, key=lambda word: word[0])).strip()
 
 
+def drawing_polygons(drawing: dict) -> list[list[tuple[float, float]]]:
+    polygons = []
+    path = []
+
+    def finish_path() -> None:
+        if len(path) >= 3:
+            polygon = path.copy()
+            if math.dist(polygon[0], polygon[-1]) <= 1e-4:
+                polygon.pop()
+            if len(polygon) >= 3:
+                polygons.append(polygon)
+        path.clear()
+
+    def add_line(start: pymupdf.Point, end: pymupdf.Point) -> None:
+        start_point = (start.x, start.y)
+        end_point = (end.x, end.y)
+        if path and math.dist(path[-1], start_point) > 1e-3:
+            finish_path()
+        if not path:
+            path.append(start_point)
+        path.append(end_point)
+
+    for item in drawing["items"]:
+        operation = item[0]
+        if operation == "re":
+            finish_path()
+            rect = item[1]
+            polygons.append([
+                (rect.x0, rect.y0),
+                (rect.x1, rect.y0),
+                (rect.x1, rect.y1),
+                (rect.x0, rect.y1),
+            ])
+        elif operation == "qu":
+            finish_path()
+            quad = item[1]
+            polygons.append([
+                (quad.ul.x, quad.ul.y),
+                (quad.ur.x, quad.ur.y),
+                (quad.lr.x, quad.lr.y),
+                (quad.ll.x, quad.ll.y),
+            ])
+        elif operation == "l":
+            add_line(item[1], item[2])
+        elif operation == "c":
+            start, control1, control2, end = item[1:]
+            if path and math.dist(path[-1], (start.x, start.y)) > 1e-3:
+                finish_path()
+            if not path:
+                path.append((start.x, start.y))
+            for step in range(1, 9):
+                t = step / 8
+                inverse = 1 - t
+                x = (
+                    inverse**3 * start.x
+                    + 3 * inverse**2 * t * control1.x
+                    + 3 * inverse * t**2 * control2.x
+                    + t**3 * end.x
+                )
+                y = (
+                    inverse**3 * start.y
+                    + 3 * inverse**2 * t * control1.y
+                    + 3 * inverse * t**2 * control2.y
+                    + t**3 * end.y
+                )
+                path.append((x, y))
+        else:
+            finish_path()
+
+    finish_path()
+    return polygons
+
+
+def point_in_polygon(x: float, y: float, polygon: list[tuple[float, float]]) -> bool:
+    inside = False
+    previous_x, previous_y = polygon[-1]
+    for current_x, current_y in polygon:
+        cross = (x - previous_x) * (current_y - previous_y) - (y - previous_y) * (
+            current_x - previous_x
+        )
+        if (
+            abs(cross) <= 1e-5
+            and min(previous_x, current_x) - 1e-5 <= x <= max(previous_x, current_x) + 1e-5
+            and min(previous_y, current_y) - 1e-5 <= y <= max(previous_y, current_y) + 1e-5
+        ):
+            return True
+        if (current_y > y) != (previous_y > y):
+            crossing_x = previous_x + (y - previous_y) * (current_x - previous_x) / (
+                current_y - previous_y
+            )
+            if x < crossing_x:
+                inside = not inside
+        previous_x, previous_y = current_x, current_y
+    return inside
+
+
+def polygon_area(polygon: list[tuple[float, float]]) -> float:
+    return abs(sum(
+        x1 * y2 - x2 * y1
+        for (x1, y1), (x2, y2) in zip(polygon, polygon[1:] + polygon[:1])
+    )) / 2
+
+
 def extract_booths(page: pymupdf.Page, crop: pymupdf.Rect) -> list[dict]:
     words = page.get_text("words")
+    booth_shapes = [
+        (polygon, polygon_area(polygon))
+        for drawing in page.get_drawings()
+        if drawing.get("fill") is not None and drawing["rect"].intersects(crop)
+        for polygon in drawing_polygons(drawing)
+        if polygon_area(polygon) > 0
+    ]
     code_words = [word for word in words if BOOTH_CODE.fullmatch(word[4])]
 
     def inside_crop(word: tuple) -> bool:
@@ -179,6 +290,20 @@ def extract_booths(page: pymupdf.Page, crop: pymupdf.Rect) -> list[dict]:
         stand = word[4]
         center_x = (word[0] + word[2]) / 2
         center_y = (word[1] + word[3]) / 2
+        matching_shapes = [
+            (polygon, area)
+            for polygon, area in booth_shapes
+            if point_in_polygon(center_x, center_y, polygon)
+        ]
+        if not matching_shapes:
+            raise ValueError(f"Could not find map geometry for booth {stand}.")
+        polygon, _ = min(matching_shapes, key=lambda shape: shape[1])
+        left = min(x for x, _ in polygon)
+        top = min(y for _, y in polygon)
+        right = max(x for x, _ in polygon)
+        bottom = max(y for _, y in polygon)
+        width = right - left
+        height = bottom - top
         booth = booths.setdefault(
             stand,
             {"stand": stand, "hall": hall_for(stand), "exhibitors": [], "locations": []},
@@ -187,6 +312,16 @@ def extract_booths(page: pymupdf.Page, crop: pymupdf.Rect) -> list[dict]:
             {
                 "x": round((center_x - crop.x0) / crop.width, 6),
                 "y": round((center_y - crop.y0) / crop.height, 6),
+                "geometry": {
+                    "x": round((left - crop.x0) / crop.width, 6),
+                    "y": round((top - crop.y0) / crop.height, 6),
+                    "width": round(width / crop.width, 6),
+                    "height": round(height / crop.height, 6),
+                    "points": [
+                        [round((x - left) / width, 6), round((y - top) / height, 6)]
+                        for x, y in polygon
+                    ],
+                },
             }
         )
 

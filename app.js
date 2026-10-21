@@ -191,8 +191,6 @@ function renderList(matches) {
 
 function renderMarkers(matches) {
   const matchingStands = new Set(matches.flatMap(visibleProfileStandNumbers));
-  const selectedExhibitor = exhibitors.find((exhibitor) => exhibitor.id === selectedExhibitorId);
-  const selectedStands = new Set(selectedExhibitor ? profileStandNumbers(selectedExhibitor) : []);
   if (!searchInput.value.trim()) {
     for (const booth of booths) {
       if (activeHall === "all" || booth.hall === activeHall) {
@@ -204,20 +202,28 @@ function renderMarkers(matches) {
 
   for (const booth of booths) {
     for (const location of booth.locations) {
-      const marker = document.createElement("button");
-      marker.type = "button";
-      marker.className = "map-pin";
-      marker.style.left = `${location.x * 100}%`;
-      marker.style.top = `${location.y * 100}%`;
-      marker.dataset.stand = booth.stand;
-      marker.setAttribute("aria-label", `${booth.stand}: ${boothDisplayName(booth)}`);
-      marker.title = `${booth.stand} · ${boothDisplayName(booth)}`;
-      const isSelected = booth.stand === selectedStand || selectedStands.has(booth.stand);
-      marker.setAttribute("aria-pressed", String(isSelected));
-      if (!matchingStands.has(booth.stand)) marker.classList.add("is-filtered");
-      if (isSelected) marker.classList.add("is-selected");
-      marker.addEventListener("click", () => selectBooth(booth.stand));
-      markerLayer.append(marker);
+      const geometry = location.geometry;
+      if (!geometry) throw new Error(`Missing map geometry for booth ${booth.stand}.`);
+
+      const boothButton = document.createElement("button");
+      boothButton.type = "button";
+      boothButton.className = "booth-region";
+      boothButton.style.left = `${geometry.x * 100}%`;
+      boothButton.style.top = `${geometry.y * 100}%`;
+      boothButton.style.width = `${geometry.width * 100}%`;
+      boothButton.style.height = `${geometry.height * 100}%`;
+      boothButton.style.clipPath = `polygon(${geometry.points
+        .map(([x, y]) => `${x * 100}% ${y * 100}%`)
+        .join(", ")})`;
+      boothButton.dataset.stand = booth.stand;
+      boothButton.setAttribute("aria-label", `${booth.stand}: ${boothDisplayName(booth)}`);
+      boothButton.title = `${booth.stand} · ${boothDisplayName(booth)}`;
+      const isSelected = booth.stand === selectedStand;
+      boothButton.setAttribute("aria-pressed", String(isSelected));
+      if (!matchingStands.has(booth.stand)) boothButton.classList.add("is-filtered");
+      if (isSelected) boothButton.classList.add("is-selected");
+      boothButton.addEventListener("click", () => selectBooth(booth.stand));
+      markerLayer.append(boothButton);
     }
   }
 }
@@ -387,6 +393,7 @@ function createSelectedCloseButton() {
     selectedStand = null;
     selectedExhibitorId = null;
     selectedPanelDismissed = true;
+    updateBoothUrl(null);
     render();
   });
   return button;
@@ -406,11 +413,12 @@ function selectBooth(stand) {
   const selectedFromMap = markerLayer.contains(document.activeElement);
   selectedPanelDismissed = false;
   selectedStand = stand;
+  updateBoothUrl(stand);
   selectedExhibitorId = exhibitors.find((exhibitor) =>
     exhibitor.stands.some((entry) => entry.number === stand),
   )?.id ?? null;
   render();
-  const target = [...markerLayer.querySelectorAll(".map-pin")]
+  const target = [...markerLayer.querySelectorAll(".booth-region")]
     .find((button) => button.dataset.stand === stand);
   if (selectedFromMap) {
     target?.focus({ preventScroll: true });
@@ -434,6 +442,7 @@ function selectExhibitor(id) {
     booths.some((booth) => booth.stand === entry.number && booth.locations.length),
   ) ?? hallStands[0] ?? exhibitor.stands[0];
   selectedStand = stand?.number ?? null;
+  updateBoothUrl(selectedStand);
   render();
   const target = [...boothList.querySelectorAll(".exhibitor-card")]
     .find((button) => button.dataset.exhibitorId === id);
@@ -479,8 +488,24 @@ mapWindow.addEventListener("pointerup", finishMapDrag);
 mapWindow.addEventListener("pointercancel", finishMapDrag);
 mapWindow.addEventListener("lostpointercapture", finishMapDrag);
 
-function setInitialSelectionFromHash() {
-  const stand = decodeURIComponent(window.location.hash.slice(1)).toUpperCase();
+function updateBoothUrl(stand) {
+  const url = new URL(window.location.href);
+  const queryBooth = url.searchParams.has("booth") || url.searchParams.has("boothId");
+  if (queryBooth) {
+    url.searchParams.delete("booth");
+    url.searchParams.delete("boothId");
+    if (stand) url.searchParams.set("booth", stand);
+    url.hash = "";
+  } else {
+    url.hash = stand ? encodeURIComponent(stand) : "";
+  }
+  window.history.replaceState(null, "", url);
+}
+
+function setInitialSelectionFromUrl() {
+  const url = new URL(window.location.href);
+  const queryStand = url.searchParams.get("booth") || url.searchParams.get("boothId");
+  const stand = (queryStand || decodeURIComponent(url.hash.slice(1))).toUpperCase();
   const booth = booths.find((entry) => entry.stand === stand);
   if (booth) {
     selectedStand = stand;
@@ -552,7 +577,7 @@ async function start() {
       : [...new Set(booths.map((booth) => booth.hall))].sort().map((id) => ({ id, label: `Hall ${id}` }));
     updateEventDetails(data);
     await loadMap(data);
-    setInitialSelectionFromHash();
+    setInitialSelectionFromUrl();
     render();
   } catch (error) {
     console.error(error);

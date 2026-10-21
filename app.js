@@ -116,8 +116,6 @@ function updateEventDetails(data, profileData) {
   document.querySelector("#footer-event-year").textContent = year;
   document.querySelector("#footer-event-year").hidden = !year;
   document.querySelector(".map-app").setAttribute("aria-label", `Interactive ${title} hall map`);
-  document.querySelector("#map-status-label").textContent =
-    halls.length ? `Halls ${halls.map((hall) => hall.id).join(", ")}` : "Hall map";
   mapArtwork.alt = `${title} floor plan showing ${hallNames.join(", ") || "the exhibition halls"}`;
   directoryFooter.textContent =
     `Booth locations are based on the supplied floor plan; exhibitor details are from ${profileData.event || "the exhibitor directory"}.`;

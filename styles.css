@@ -164,25 +164,6 @@ h1 {
   letter-spacing: -.035em;
 }
 
-.map-heading {
-  padding: 0 1px 17px;
-}
-
-.map-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 11px;
-  border: 1px solid #e5ece7;
-  border-radius: 999px;
-  background: #fff;
-  color: #68766f;
-  font-size: 10px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.map-status span,
 .map-legend span {
   width: 8px;
   height: 8px;
@@ -913,10 +894,6 @@ h1 {
 
   .map-panel {
     padding: 17px 12px 12px;
-  }
-
-  .map-heading {
-    padding: 0 2px 12px;
   }
 
   .map-stage {

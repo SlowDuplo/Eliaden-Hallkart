@@ -19,7 +19,9 @@ let selectedExhibitorId = null;
 let selectedPanelDismissed = false;
 let activeHall = "all";
 let scale = 1;
-let mapDrag = null;
+const activeMapPointers = new Map();
+const suppressedMapClicks = new WeakSet();
+let mapGesture = null;
 
 function boothName(booth) {
   return booth.exhibitors.length
@@ -450,43 +452,136 @@ function selectExhibitor(id) {
   target?.focus({ preventScroll: true });
 }
 
-function setZoom(nextScale) {
+function setZoom(nextScale, focusPoint = null) {
+  const previousScale = scale;
   scale = Math.max(1, Math.min(5, nextScale));
-  mapCanvas.style.width = `${scale * 100}%`;
-  if (scale === 1) {
+  mapCanvas.style.transform = `scale(${scale})`;
+  if (focusPoint && scale !== previousScale) {
+    const factor = scale / previousScale;
+    mapWindow.scrollLeft = (mapWindow.scrollLeft + focusPoint.x) * factor - focusPoint.x;
+    mapWindow.scrollTop = (mapWindow.scrollTop + focusPoint.y) * factor - focusPoint.y;
+  } else if (!focusPoint && scale === 1) {
     mapWindow.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }
 }
 
 mapWindow.addEventListener("pointerdown", (event) => {
-  if (!event.isPrimary || event.button !== 0 || event.target.closest("button, a, input")) return;
-  mapDrag = {
-    pointerId: event.pointerId,
-    startX: event.clientX,
-    startY: event.clientY,
-    scrollLeft: mapWindow.scrollLeft,
-    scrollTop: mapWindow.scrollTop,
-  };
-  mapWindow.setPointerCapture(event.pointerId);
+  if (event.target.closest(".zoom-controls")) return;
+  if (event.pointerType !== "touch") {
+    if (!event.isPrimary || event.button !== 0 || event.target.closest("button, a, input")) return;
+    mapWindow.setPointerCapture(event.pointerId);
+  }
+  const booth = event.target.closest(".booth-region");
+  activeMapPointers.set(event.pointerId, {
+    x: event.clientX,
+    y: event.clientY,
+    booth,
+  });
+
+  if (event.pointerType === "touch" && activeMapPointers.size >= 2) {
+    for (const pointer of activeMapPointers.values()) {
+      if (pointer.booth) suppressedMapClicks.add(pointer.booth);
+    }
+    const [first, second] = [...activeMapPointers.values()];
+    mapGesture = {
+      type: "pinch",
+      distance: Math.hypot(second.x - first.x, second.y - first.y),
+      midpoint: mapMidpoint(first, second),
+    };
+    mapWindow.classList.add("is-zooming");
+  } else {
+    mapGesture = {
+      type: "pan",
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      scrollLeft: mapWindow.scrollLeft,
+      scrollTop: mapWindow.scrollTop,
+    };
+  }
   mapWindow.classList.add("is-dragging");
 });
 
 mapWindow.addEventListener("pointermove", (event) => {
-  if (!mapDrag || event.pointerId !== mapDrag.pointerId) return;
-  mapWindow.scrollLeft = mapDrag.scrollLeft - (event.clientX - mapDrag.startX);
-  mapWindow.scrollTop = mapDrag.scrollTop - (event.clientY - mapDrag.startY);
+  if (!activeMapPointers.has(event.pointerId) || !mapGesture) return;
+  activeMapPointers.set(event.pointerId, {
+    ...activeMapPointers.get(event.pointerId),
+    x: event.clientX,
+    y: event.clientY,
+  });
+
+  if (mapGesture.type === "pinch") {
+    const [first, second] = [...activeMapPointers.values()];
+    if (!first || !second) return;
+    const distance = Math.hypot(second.x - first.x, second.y - first.y);
+    if (mapGesture.distance > 0 && distance > 0) {
+      const nextMidpoint = mapMidpoint(first, second);
+      setZoom(scale * distance / mapGesture.distance, mapGesture.midpoint);
+      mapWindow.scrollLeft += mapGesture.midpoint.x - nextMidpoint.x;
+      mapWindow.scrollTop += mapGesture.midpoint.y - nextMidpoint.y;
+      mapGesture.distance = distance;
+      mapGesture.midpoint = nextMidpoint;
+    }
+  } else if (event.pointerId === mapGesture.pointerId) {
+    if (Math.hypot(event.clientX - mapGesture.startX, event.clientY - mapGesture.startY) > 4) {
+      const pointer = activeMapPointers.get(event.pointerId);
+      if (pointer.booth) suppressedMapClicks.add(pointer.booth);
+    }
+    mapWindow.scrollLeft = mapGesture.scrollLeft - (event.clientX - mapGesture.startX);
+    mapWindow.scrollTop = mapGesture.scrollTop - (event.clientY - mapGesture.startY);
+  }
   event.preventDefault();
 });
 
-function finishMapDrag(event) {
-  if (!mapDrag || event.pointerId !== mapDrag.pointerId) return;
-  mapDrag = null;
-  mapWindow.classList.remove("is-dragging");
+function mapMidpoint(first, second) {
+  const rect = mapWindow.getBoundingClientRect();
+  return {
+    x: (first.x + second.x) / 2 - rect.left - mapWindow.clientLeft,
+    y: (first.y + second.y) / 2 - rect.top - mapWindow.clientTop,
+  };
 }
 
-mapWindow.addEventListener("pointerup", finishMapDrag);
-mapWindow.addEventListener("pointercancel", finishMapDrag);
-mapWindow.addEventListener("lostpointercapture", finishMapDrag);
+function finishMapGesture(event) {
+  if (!activeMapPointers.has(event.pointerId)) return;
+  activeMapPointers.delete(event.pointerId);
+  if (activeMapPointers.size >= 2) {
+    const [first, second] = [...activeMapPointers.values()];
+    mapGesture = {
+      type: "pinch",
+      distance: Math.hypot(second.x - first.x, second.y - first.y),
+      midpoint: mapMidpoint(first, second),
+    };
+    mapWindow.classList.add("is-zooming");
+    return;
+  }
+  if (activeMapPointers.size === 1) {
+    const [pointerId, pointer] = [...activeMapPointers.entries()][0];
+    mapGesture = {
+      type: "pan",
+      pointerId,
+      startX: pointer.x,
+      startY: pointer.y,
+      scrollLeft: mapWindow.scrollLeft,
+      scrollTop: mapWindow.scrollTop,
+    };
+    mapWindow.classList.remove("is-zooming");
+    return;
+  }
+  mapGesture = null;
+  mapWindow.classList.remove("is-dragging", "is-zooming");
+}
+
+mapWindow.addEventListener("click", (event) => {
+  const booth = event.target.closest(".booth-region");
+  if (!booth || !suppressedMapClicks.has(booth)) return;
+  suppressedMapClicks.delete(booth);
+  event.preventDefault();
+  event.stopImmediatePropagation();
+}, true);
+
+mapWindow.addEventListener("pointerup", finishMapGesture);
+mapWindow.addEventListener("pointercancel", finishMapGesture);
+mapWindow.addEventListener("lostpointercapture", finishMapGesture);
 
 function updateBoothUrl(stand) {
   const url = new URL(window.location.href);

@@ -198,11 +198,16 @@ h1 {
   cursor: grabbing;
 }
 
+.map-window.is-zooming .map-canvas {
+  transition: none;
+}
+
 .map-canvas {
   position: relative;
   width: 100%;
   margin: 0 auto;
-  transition: width 180ms ease;
+  transform-origin: top left;
+  transition: transform 180ms ease;
 }
 
 .map-markers {

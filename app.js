@@ -19,6 +19,7 @@ let selectedStand = null;
 let selectedExhibitorId = null;
 let activeHall = "all";
 let scale = 1;
+let mapDrag = null;
 
 function boothName(booth) {
   return booth.exhibitors.length
@@ -433,6 +434,36 @@ function setZoom(nextScale) {
     mapWindow.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }
 }
+
+mapWindow.addEventListener("pointerdown", (event) => {
+  if (!event.isPrimary || event.button !== 0 || event.target.closest("button, a, input")) return;
+  mapDrag = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    scrollLeft: mapWindow.scrollLeft,
+    scrollTop: mapWindow.scrollTop,
+  };
+  mapWindow.setPointerCapture(event.pointerId);
+  mapWindow.classList.add("is-dragging");
+});
+
+mapWindow.addEventListener("pointermove", (event) => {
+  if (!mapDrag || event.pointerId !== mapDrag.pointerId) return;
+  mapWindow.scrollLeft = mapDrag.scrollLeft - (event.clientX - mapDrag.startX);
+  mapWindow.scrollTop = mapDrag.scrollTop - (event.clientY - mapDrag.startY);
+  event.preventDefault();
+});
+
+function finishMapDrag(event) {
+  if (!mapDrag || event.pointerId !== mapDrag.pointerId) return;
+  mapDrag = null;
+  mapWindow.classList.remove("is-dragging");
+}
+
+mapWindow.addEventListener("pointerup", finishMapDrag);
+mapWindow.addEventListener("pointercancel", finishMapDrag);
+mapWindow.addEventListener("lostpointercapture", finishMapDrag);
 
 function setInitialSelectionFromHash() {
   const stand = decodeURIComponent(window.location.hash.slice(1)).toUpperCase();

@@ -35,7 +35,12 @@
               <span id="map-status-label">Hall map</span>
             </span>
           </div>
-          <div class="map-window" id="map-window">
+          <div
+            class="map-window"
+            id="map-window"
+            role="region"
+            aria-label="Hall map viewport. Drag to pan and use the zoom controls to zoom."
+          >
             <div class="map-canvas" id="map-canvas">
               <img
                 id="map-artwork"
@@ -53,7 +58,7 @@
             </div>
             <div class="map-legend"><span aria-hidden="true"></span> Select a booth to see its exhibitor</div>
           </div>
-          <p class="map-note" id="map-note">Booths without a clear position on the floor plan remain searchable in the directory.</p>
+          <p class="map-note" id="map-note">Drag the map to pan; use + and − to zoom. Booths without a clear position on the floor plan remain searchable in the directory.</p>
         </section>
 
         <aside class="directory-panel" aria-label="Exhibitor directory">

@@ -123,6 +123,8 @@ h1 {
 .map-app {
   display: grid;
   grid-template-columns: minmax(0, 1.85fr) minmax(360px, .9fr);
+  grid-template-rows: minmax(0, 1fr);
+  height: min(82vh, 880px);
   min-height: 720px;
   overflow: hidden;
   border: 1px solid rgb(208 219 218 / 85%);
@@ -134,6 +136,7 @@ h1 {
 .map-panel,
 .directory-panel {
   min-width: 0;
+  min-height: 0;
 }
 
 .map-panel {
@@ -195,8 +198,15 @@ h1 {
   border: 1px solid #dfe9e4;
   border-radius: 11px;
   background: #d9efeb;
+  cursor: grab;
   scrollbar-color: #b5c9c5 transparent;
   scrollbar-width: thin;
+  touch-action: none;
+  user-select: none;
+}
+
+.map-window.is-dragging {
+  cursor: grabbing;
 }
 
 .map-canvas {
@@ -800,7 +810,7 @@ h1 {
 
 @media (min-width: 1450px) {
   .map-app {
-    min-height: min(76vh, 880px);
+    height: min(76vh, 880px);
   }
 }
 
@@ -854,6 +864,8 @@ h1 {
 
   .map-app {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    height: auto;
     min-height: 0;
     border-radius: 13px;
   }

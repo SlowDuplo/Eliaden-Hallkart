@@ -176,6 +176,8 @@ python3 -m http.server 8000
 ```
 
 Open <http://localhost:8000>, check the map, filters, search results and a few
-booth locations, then commit the generated image and JSON together. GitHub
-Pages uses the repository root: in **Settings → Pages**, choose **Deploy from a
-branch**, select `main` and `/(root)`, then save.
+booth locations. Drag within the map to pan, use the zoom buttons to zoom in
+or out, and reset the view with the fit button. If you processed the PDF
+manually, commit the generated image and JSON together. GitHub Pages uses the
+repository root: in **Settings → Pages**, choose **Deploy from a branch**,
+select `main` and `/(root)`, then save.

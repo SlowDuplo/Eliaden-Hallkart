@@ -1,12 +1,3 @@
-const halls = [
-  { id: "all", label: "All halls" },
-  { id: "A", label: "Hall A" },
-  { id: "B", label: "Hall B" },
-  { id: "C", label: "Hall C" },
-  { id: "D", label: "Hall D" },
-  { id: "U", label: "Hall U" },
-];
-
 const searchInput = document.querySelector("#search");
 const filterContainer = document.querySelector("#hall-filters");
 const boothList = document.querySelector("#booth-list");
@@ -18,8 +9,10 @@ const emptyState = document.querySelector("#empty-state");
 const directoryFooter = document.querySelector("#directory-footer");
 const mapCanvas = document.querySelector("#map-canvas");
 const mapWindow = document.querySelector("#map-window");
+const mapArtwork = document.querySelector("#map-artwork");
 
 let booths = [];
+let halls = [];
 let selectedStand = null;
 let activeHall = "all";
 let scale = 1;
@@ -34,10 +27,37 @@ function boothSearchText(booth) {
   return `${booth.stand} ${booth.hall} ${boothName(booth)}`.toLocaleLowerCase("nb-NO");
 }
 
+function updateEventDetails(data) {
+  const eventInfo = data.event ?? {};
+  const name = eventInfo.name || "Event";
+  const year = eventInfo.year ? String(eventInfo.year) : "";
+  const title = [name, year].filter(Boolean).join(" ");
+  const hallNames = halls.map((hall) => hall.label);
+  const eventDetails = [eventInfo.dates, eventInfo.venue].filter(Boolean).join(" · ");
+
+  document.title = `${title} — Hall map`;
+  document.querySelector('meta[name="description"]').content =
+    `Search exhibitors and booth locations for ${title}.`;
+  document.querySelector("#event-name").textContent = name;
+  document.querySelector("#event-year").textContent = year;
+  document.querySelector("#event-year").hidden = !year;
+  document.querySelector("#event-details").textContent = eventDetails;
+  document.querySelector("#event-details").hidden = !eventDetails;
+  document.querySelector("#footer-event-name").textContent = name;
+  document.querySelector("#footer-event-year").textContent = year;
+  document.querySelector("#footer-event-year").hidden = !year;
+  document.querySelector(".map-app").setAttribute("aria-label", `Interactive ${title} hall map`);
+  document.querySelector("#map-status-label").textContent =
+    halls.length ? `Halls ${halls.map((hall) => hall.id).join(", ")}` : "Hall map";
+  mapArtwork.alt = `${title} floor plan showing ${hallNames.join(", ") || "the exhibition halls"}`;
+  directoryFooter.textContent = `Booth details and locations are based on the supplied${year ? ` ${year}` : ""} floor plan.`;
+}
+
 function renderFilters() {
   filterContainer.replaceChildren();
 
-  for (const hall of halls) {
+  const options = [{ id: "all", label: "All halls" }, ...halls];
+  for (const hall of options) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "hall-filter";
@@ -178,7 +198,6 @@ function render() {
   const matches = visibleBooths();
   totalCount.textContent = String(booths.length);
   resultSummary.textContent = `${matches.length} ${matches.length === 1 ? "booth" : "booths"} shown`;
-  directoryFooter.textContent = "Booth details and locations are based on the supplied 2026 floor plan.";
   renderFilters();
   renderList(matches);
   renderMarkers(matches);
@@ -196,9 +215,8 @@ function selectBooth(stand) {
     target?.focus({ preventScroll: true });
     return;
   }
-  const listButton = target;
-  listButton?.scrollIntoView({ block: "nearest" });
-  listButton?.focus({ preventScroll: true });
+  target?.scrollIntoView({ block: "nearest" });
+  target?.focus({ preventScroll: true });
 }
 
 function setZoom(nextScale) {
@@ -211,10 +229,43 @@ function setZoom(nextScale) {
 
 function setInitialSelectionFromHash() {
   const stand = decodeURIComponent(window.location.hash.slice(1)).toUpperCase();
-  if (booths.some((booth) => booth.stand === stand)) {
+  const booth = booths.find((entry) => entry.stand === stand);
+  if (booth) {
     selectedStand = stand;
-    activeHall = booths.find((booth) => booth.stand === stand).hall;
+    activeHall = booth.hall;
   }
+}
+
+function loadMap(data) {
+  const source = data.map?.image || "./assets/hall-map.png";
+  return new Promise((resolve, reject) => {
+    const finish = () => {
+      mapArtwork.removeEventListener("load", handleLoad);
+      mapArtwork.removeEventListener("error", handleError);
+    };
+    const handleLoad = () => {
+      finish();
+      if (mapArtwork.naturalWidth && mapArtwork.naturalHeight) {
+        resolve();
+      } else {
+        reject(new Error("The map artwork has no readable image dimensions."));
+      }
+    };
+    const handleError = () => {
+      finish();
+      reject(new Error(`Could not load map artwork from "${source}".`));
+    };
+
+    if (mapArtwork.getAttribute("src") === source && mapArtwork.complete) {
+      handleLoad();
+      return;
+    }
+
+    mapArtwork.addEventListener("load", handleLoad);
+    mapArtwork.addEventListener("error", handleError);
+    if (mapArtwork.getAttribute("src") !== source) mapArtwork.src = source;
+    if (mapArtwork.complete) handleLoad();
+  });
 }
 
 async function start() {
@@ -225,12 +276,18 @@ async function start() {
     if (!Array.isArray(data.booths) || data.booths.length === 0) {
       throw new Error("The booth data file is empty or invalid.");
     }
+
     booths = data.booths;
+    halls = Array.isArray(data.halls) && data.halls.length
+      ? data.halls
+      : [...new Set(booths.map((booth) => booth.hall))].sort().map((id) => ({ id, label: `Hall ${id}` }));
+    updateEventDetails(data);
+    await loadMap(data);
     setInitialSelectionFromHash();
     render();
   } catch (error) {
     console.error(error);
-    resultSummary.textContent = "The booth directory could not be loaded. Reload the page to try again.";
+    resultSummary.textContent = "The hall map could not be loaded. Check its data and artwork files, then reload.";
     boothList.hidden = true;
     emptyState.hidden = true;
     selectedPanel.textContent = error.message;

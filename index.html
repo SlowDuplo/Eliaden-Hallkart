@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#111a49">
-    <meta name="description" content="Find exhibitors and booth locations at Eliaden 2026.">
-    <title>Eliaden 2026 — Hall map</title>
+    <meta name="description" content="Search exhibitors and booth locations on an interactive hall map.">
+    <title>Hall map</title>
     <link rel="stylesheet" href="./styles.css">
     <script src="./app.js" defer></script>
   </head>
@@ -14,33 +14,37 @@
       <header class="page-header">
         <a class="wordmark" href="./" aria-label="Eliaden hall map home">
           <span class="wordmark-mark" aria-hidden="true">E</span>
-          <span>ELIADEN <span class="wordmark-year">2026</span></span>
+          <span><span id="event-name">Hall map</span> <span id="event-year" class="wordmark-year" hidden></span></span>
         </a>
         <div class="page-heading">
-          <p class="eyebrow">NOVA SPEKTRUM · 14–16 OCTOBER 2026</p>
+          <p class="eyebrow" id="event-details" hidden></p>
           <h1>Find your next connection.</h1>
-          <p class="intro">Explore the halls, find exhibitors and plan your visit.</p>
+          <p class="intro">Search for an exhibitor, filter by hall or select a booth on the map.</p>
         </div>
       </header>
 
-      <section class="map-app" aria-label="Interactive Eliaden hall map">
+      <section class="map-app" aria-label="Interactive hall map">
         <section class="map-panel" aria-label="Hall plan">
           <div class="panel-heading map-heading">
             <div>
               <p class="eyebrow">THE EXHIBITION</p>
               <h2>Hall map</h2>
             </div>
-            <span class="map-status"><span aria-hidden="true"></span> Halls A, B, C, D &amp; U</span>
+            <span class="map-status">
+              <span aria-hidden="true"></span>
+              <span id="map-status-label">Hall map</span>
+            </span>
           </div>
           <div class="map-window" id="map-window">
             <div class="map-canvas" id="map-canvas">
               <img
+                id="map-artwork"
                 class="map-artwork"
                 src="./assets/hall-map.png"
-                alt="Eliaden 2026 floor plan showing halls B, C, D and U"
+                alt="Exhibition floor plan"
                 draggable="false"
               >
-              <div class="map-markers" id="map-markers" aria-label="Booth locations"></div>
+              <div class="map-markers" id="map-markers" role="group" aria-label="Booth locations"></div>
             </div>
             <div class="zoom-controls" aria-label="Map zoom controls">
               <button id="zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
@@ -49,9 +53,7 @@
             </div>
             <div class="map-legend"><span aria-hidden="true"></span> Select a booth to see its exhibitor</div>
           </div>
-          <p class="map-note" id="map-note">
-            The plan is shown as published. Booths without a clear label on the source drawing are still available in the directory.
-          </p>
+          <p class="map-note" id="map-note">Booths without a clear position on the floor plan remain searchable in the directory.</p>
         </section>
 
         <aside class="directory-panel" aria-label="Exhibitor directory">
@@ -92,7 +94,7 @@
               </div>
             </div>
           </section>
-          <div class="booth-list" id="booth-list" aria-label="Matching exhibitors"></div>
+          <section class="booth-list" id="booth-list" aria-label="Matching exhibitors"></section>
           <div class="empty-state" id="empty-state" hidden>
             <span aria-hidden="true">⌕</span>
             <strong>No booths found</strong>
@@ -102,7 +104,7 @@
         </aside>
       </section>
       <footer class="page-footer">
-        <span>ELIADEN <span>2026</span></span>
+        <span><span id="footer-event-name">Hall map</span> <span id="footer-event-year" hidden></span></span>
         <span>Electrical engineering · Automation · Energy</span>
       </footer>
     </main>

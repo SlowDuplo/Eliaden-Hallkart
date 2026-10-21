@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111a49">
+    <meta name="description" content="Find exhibitors and booth locations at Eliaden 2026.">
+    <title>Eliaden 2026 — Hall map</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="page-header">
+        <a class="wordmark" href="./" aria-label="Eliaden hall map home">
+          <span class="wordmark-mark" aria-hidden="true">E</span>
+          <span>ELIADEN <span class="wordmark-year">2026</span></span>
+        </a>
+        <div class="page-heading">
+          <p class="eyebrow">NOVA SPEKTRUM · 14–16 OCTOBER 2026</p>
+          <h1>Find your next connection.</h1>
+          <p class="intro">Explore the halls, find exhibitors and plan your visit.</p>
+        </div>
+      </header>
+
+      <section class="map-app" aria-label="Interactive Eliaden hall map">
+        <section class="map-panel" aria-label="Hall plan">
+          <div class="panel-heading map-heading">
+            <div>
+              <p class="eyebrow">THE EXHIBITION</p>
+              <h2>Hall map</h2>
+            </div>
+            <span class="map-status"><span aria-hidden="true"></span> Halls B, C, D &amp; U</span>
+          </div>
+          <div class="map-window" id="map-window">
+            <div class="map-canvas" id="map-canvas">
+              <img
+                class="map-artwork"
+                src="./assets/hall-map.png"
+                alt="Eliaden 2026 floor plan showing halls B, C, D and U"
+                draggable="false"
+              >
+              <div class="map-markers" id="map-markers" aria-label="Booth locations"></div>
+            </div>
+            <div class="zoom-controls" aria-label="Map zoom controls">
+              <button id="zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+              <button id="zoom-out" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+              <button id="zoom-fit" type="button" aria-label="Reset map zoom" title="Reset map zoom">↗</button>
+            </div>
+            <div class="map-legend"><span aria-hidden="true"></span> Select a booth to see its exhibitor</div>
+          </div>
+          <p class="map-note" id="map-note">
+            The plan is shown as published. Booths without a clear label on the source drawing are still available in the directory.
+          </p>
+        </section>
+
+        <aside class="directory-panel" aria-label="Exhibitor directory">
+          <div class="directory-top">
+            <div class="panel-heading directory-heading">
+              <div>
+                <p class="eyebrow">PLAN YOUR VISIT</p>
+                <h2>Booth directory</h2>
+              </div>
+              <span class="total-count" id="total-count">—</span>
+            </div>
+            <label class="search-box" for="search">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <circle cx="10.8" cy="10.8" r="6.3"></circle>
+                <path d="m16 16 4.2 4.2"></path>
+              </svg>
+              <input
+                id="search"
+                type="search"
+                placeholder="Search exhibitor or booth"
+                autocomplete="off"
+                spellcheck="false"
+              >
+              <kbd>/</kbd>
+            </label>
+            <div class="filter-row">
+              <span class="filter-label">FILTER BY HALL</span>
+              <div class="hall-filters" id="hall-filters" role="group" aria-label="Filter booths by hall"></div>
+            </div>
+            <div class="result-summary" id="result-summary" aria-live="polite"></div>
+          </div>
+          <section class="selected-booth" id="selected-booth" aria-live="polite" aria-label="Selected booth">
+            <div class="selected-placeholder">
+              <span class="selected-icon" aria-hidden="true">↖</span>
+              <div>
+                <strong>Select a booth</strong>
+                <p>Choose a pin on the map or an exhibitor in the list.</p>
+              </div>
+            </div>
+          </section>
+          <div class="booth-list" id="booth-list" aria-label="Matching exhibitors"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <span aria-hidden="true">⌕</span>
+            <strong>No booths found</strong>
+            <p>Try a different exhibitor name, booth number or hall.</p>
+          </div>
+          <footer class="directory-footer" id="directory-footer"></footer>
+        </aside>
+      </section>
+      <footer class="page-footer">
+        <span>ELIADEN <span>2026</span></span>
+        <span>Electrical engineering · Automation · Energy</span>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -227,7 +227,7 @@ def write_outputs(
     image_path.parent.mkdir(parents=True, exist_ok=True)
     data_path.parent.mkdir(parents=True, exist_ok=True)
 
-    pixmap = page.get_pixmap(matrix=pymupdf.Matrix(2, 2), clip=crop, alpha=False)
+    pixmap = page.get_pixmap(matrix=pymupdf.Matrix(4, 4), clip=crop, alpha=False)
     pixmap.save(image_path)
 
     halls = sorted({booth["hall"] for booth in booths})

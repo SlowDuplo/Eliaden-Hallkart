@@ -48,6 +48,9 @@ The crop must include every hall and booth label to be shown. The script writes
 map positions as normalized `x`/`y` values for the generated image, so process
 the PDF again whenever booth positions change. Map labels split across two
 lines, such as `D01-` followed by `23`, are joined automatically.
+The map image is rendered at 4× PDF scale to keep booth details sharp when
+zoomed; `image_size` records the generated resolution while booth coordinates
+remain normalized.
 
 Fetch the matching exhibitor profiles separately so the directory can show
 company information and logos:

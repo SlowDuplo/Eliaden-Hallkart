@@ -35,28 +35,30 @@
               <span id="map-status-label">Hall map</span>
             </span>
           </div>
-          <div
-            class="map-window"
-            id="map-window"
-            role="region"
-            aria-label="Hall map viewport. Drag to pan and use the zoom controls to zoom."
-          >
-            <div class="map-canvas" id="map-canvas">
-              <img
-                id="map-artwork"
-                class="map-artwork"
-                src="./assets/hall-map.png"
-                alt="Exhibition floor plan"
-                draggable="false"
-              >
-              <div class="map-markers" id="map-markers" role="group" aria-label="Booth locations"></div>
+          <div class="map-stage">
+            <div
+              class="map-window"
+              id="map-window"
+              role="region"
+              aria-label="Hall map viewport. Drag to pan and use the zoom controls to zoom."
+            >
+              <div class="map-canvas" id="map-canvas">
+                <img
+                  id="map-artwork"
+                  class="map-artwork"
+                  src="./assets/hall-map.png"
+                  alt="Exhibition floor plan"
+                  draggable="false"
+                >
+                <div class="map-markers" id="map-markers" role="group" aria-label="Booth locations"></div>
+              </div>
+              <div class="map-legend"><span aria-hidden="true"></span> Select a booth to see its exhibitor</div>
             </div>
             <div class="zoom-controls" aria-label="Map zoom controls">
               <button id="zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
               <button id="zoom-out" type="button" aria-label="Zoom out" title="Zoom out">−</button>
               <button id="zoom-fit" type="button" aria-label="Reset map zoom" title="Reset map zoom">↗</button>
             </div>
-            <div class="map-legend"><span aria-hidden="true"></span> Select a booth to see its exhibitor</div>
           </div>
           <p class="map-note" id="map-note">Drag the map to pan; use + and − to zoom. Booths without a clear position on the floor plan remain searchable in the directory.</p>
         </section>

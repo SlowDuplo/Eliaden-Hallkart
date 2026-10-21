@@ -190,10 +190,18 @@ h1 {
   background: #63aa96;
 }
 
+.map-stage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 420px;
+}
+
 .map-window {
   position: relative;
   flex: 1;
-  min-height: 420px;
+  min-height: 0;
   overflow: auto;
   border: 1px solid #dfe9e4;
   border-radius: 11px;
@@ -911,8 +919,13 @@ h1 {
     padding: 0 2px 12px;
   }
 
-  .map-window {
+  .map-stage {
     flex: 0 0 auto;
+    min-height: 0;
+  }
+
+  .map-window {
+    flex: 0 1 auto;
     min-height: 0;
     max-height: 65vh;
   }

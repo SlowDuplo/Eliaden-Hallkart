@@ -17,6 +17,7 @@ let hiddenStands = new Set();
 let halls = [];
 let selectedStand = null;
 let selectedExhibitorId = null;
+let selectedPanelDismissed = false;
 let activeHall = "all";
 let scale = 1;
 let mapDrag = null;
@@ -334,9 +335,12 @@ function renderExhibitorDetails(exhibitor) {
 
 function renderSelected() {
   selectedPanel.replaceChildren();
+  selectedPanel.hidden = selectedPanelDismissed;
+  if (selectedPanelDismissed) return;
+
   const exhibitor = exhibitors.find((entry) => entry.id === selectedExhibitorId);
   if (exhibitor) {
-    selectedPanel.append(renderExhibitorDetails(exhibitor));
+    selectedPanel.append(createSelectedCloseButton(), renderExhibitorDetails(exhibitor));
     return;
   }
 
@@ -377,7 +381,23 @@ function renderSelected() {
   code.className = "selected-booth-code";
   code.textContent = booth.stand;
   content.append(main, code);
-  selectedPanel.append(content);
+  selectedPanel.append(createSelectedCloseButton(), content);
+}
+
+function createSelectedCloseButton() {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "selected-close";
+  button.setAttribute("aria-label", "Close selected exhibitor details");
+  button.title = "Close";
+  button.textContent = "×";
+  button.addEventListener("click", () => {
+    selectedStand = null;
+    selectedExhibitorId = null;
+    selectedPanelDismissed = true;
+    render();
+  });
+  return button;
 }
 
 function render() {
@@ -392,6 +412,7 @@ function render() {
 
 function selectBooth(stand) {
   const selectedFromMap = markerLayer.contains(document.activeElement);
+  selectedPanelDismissed = false;
   selectedStand = stand;
   selectedExhibitorId = exhibitors.find((exhibitor) =>
     exhibitor.stands.some((entry) => entry.number === stand),
@@ -412,6 +433,7 @@ function selectBooth(stand) {
 function selectExhibitor(id) {
   const exhibitor = exhibitors.find((entry) => entry.id === id);
   if (!exhibitor) return;
+  selectedPanelDismissed = false;
   selectedExhibitorId = id;
   const hallStands = exhibitor.stands.filter((entry) =>
     activeHall === "all" || standHall(entry.number) === activeHall,

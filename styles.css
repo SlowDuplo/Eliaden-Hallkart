@@ -496,12 +496,43 @@ h1 {
 }
 
 .selected-booth {
+  position: relative;
   flex: 0 0 auto;
   margin: 13px 15px 2px;
   max-height: 320px;
   overflow: auto;
   border-radius: 10px;
   background: #f0f6f3;
+}
+
+.selected-close {
+  position: absolute;
+  z-index: 1;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #dce7e1;
+  border-radius: 50%;
+  background: #fff;
+  color: #61736d;
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.selected-close:hover {
+  border-color: #a5cbbd;
+  background: #f7fbf8;
+  color: var(--navy);
+}
+
+.selected-close:focus-visible {
+  outline: 3px solid #1f9278;
+  outline-offset: 2px;
 }
 
 .selected-placeholder,
@@ -544,6 +575,7 @@ h1 {
 .selected-content {
   align-items: center;
   justify-content: space-between;
+  padding-right: 38px;
 }
 
 .selected-content-main {
@@ -576,6 +608,7 @@ h1 {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding-right: 26px;
 }
 
 .exhibitor-logo,

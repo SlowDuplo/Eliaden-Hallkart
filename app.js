@@ -6,7 +6,6 @@ const selectedPanel = document.querySelector("#selected-booth");
 const resultSummary = document.querySelector("#result-summary");
 const totalCount = document.querySelector("#total-count");
 const emptyState = document.querySelector("#empty-state");
-const directoryFooter = document.querySelector("#directory-footer");
 const mapCanvas = document.querySelector("#map-canvas");
 const mapWindow = document.querySelector("#map-window");
 const mapArtwork = document.querySelector("#map-artwork");
@@ -96,7 +95,7 @@ function makeExhibitors(profileData) {
   return profiles;
 }
 
-function updateEventDetails(data, profileData) {
+function updateEventDetails(data) {
   const eventInfo = data.event ?? {};
   const name = eventInfo.name || "Event";
   const year = eventInfo.year ? String(eventInfo.year) : "";
@@ -117,8 +116,6 @@ function updateEventDetails(data, profileData) {
   document.querySelector("#footer-event-year").hidden = !year;
   document.querySelector(".map-app").setAttribute("aria-label", `Interactive ${title} hall map`);
   mapArtwork.alt = `${title} floor plan showing ${hallNames.join(", ") || "the exhibition halls"}`;
-  directoryFooter.textContent =
-    `Booth locations are based on the supplied floor plan; exhibitor details are from ${profileData.event || "the exhibitor directory"}.`;
 }
 
 function renderFilters() {
@@ -556,7 +553,7 @@ async function start() {
     halls = Array.isArray(data.halls) && data.halls.length
       ? data.halls
       : [...new Set(booths.map((booth) => booth.hall))].sort().map((id) => ({ id, label: `Hall ${id}` }));
-    updateEventDetails(data, profileData);
+    updateEventDetails(data);
     await loadMap(data);
     setInitialSelectionFromHash();
     render();

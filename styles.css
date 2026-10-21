@@ -796,14 +796,6 @@ h1 {
   line-height: 1.5;
 }
 
-.directory-footer {
-  flex: 0 0 auto;
-  padding: 10px 22px 13px;
-  border-top: 1px solid var(--line);
-  color: #88928f;
-  font-size: 9px;
-}
-
 .page-footer {
   display: flex;
   justify-content: space-between;

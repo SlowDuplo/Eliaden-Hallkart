@@ -10,6 +10,7 @@ const directoryFooter = document.querySelector("#directory-footer");
 const mapCanvas = document.querySelector("#map-canvas");
 const mapWindow = document.querySelector("#map-window");
 const mapArtwork = document.querySelector("#map-artwork");
+const mapPinOffsets = new Map();
 
 let booths = [];
 let exhibitors = [];
@@ -197,6 +198,68 @@ function renderList(matches) {
   }
 }
 
+function positionMapPins() {
+  const width = mapArtwork.naturalWidth;
+  const height = mapArtwork.naturalHeight;
+  const locations = booths.flatMap((booth) =>
+    booth.locations.map((location) => ({
+      booth,
+      location,
+      x: location.x * width,
+      y: location.y * height,
+    })),
+  );
+  const directions = [
+    [1, 0],
+    [Math.SQRT1_2, Math.SQRT1_2],
+    [0, 1],
+    [-Math.SQRT1_2, Math.SQRT1_2],
+    [-1, 0],
+    [-Math.SQRT1_2, -Math.SQRT1_2],
+    [0, -1],
+    [Math.SQRT1_2, -Math.SQRT1_2],
+  ];
+  const distances = [32, 40, 48, 56, 64];
+  const minimumLabelClearance = 35;
+
+  // Place each circular marker in nearby whitespace, clear of the printed booth labels.
+  mapPinOffsets.clear();
+  for (const current of locations) {
+    let bestPosition = null;
+    for (const distance of distances) {
+      let bestAtDistance = null;
+      for (const [directionX, directionY] of directions) {
+        const x = current.x + directionX * distance;
+        const y = current.y + directionY * distance;
+        if (x < 0 || x > width || y < 0 || y > height) continue;
+
+        let clearance = Number.POSITIVE_INFINITY;
+        for (const other of locations) {
+          if (other.location === current.location) continue;
+          clearance = Math.min(clearance, Math.hypot(x - other.x, y - other.y));
+        }
+        if (!bestAtDistance || clearance > bestAtDistance.clearance) {
+          bestAtDistance = { x, y, clearance };
+        }
+      }
+      if (bestAtDistance && (!bestPosition || bestAtDistance.clearance > bestPosition.clearance)) {
+        bestPosition = bestAtDistance;
+      }
+      if (bestAtDistance?.clearance >= minimumLabelClearance) {
+        bestPosition = bestAtDistance;
+        break;
+      }
+    }
+    if (!bestPosition) {
+      throw new Error(`Could not position a marker for booth ${current.booth.stand}.`);
+    }
+    mapPinOffsets.set(current.location, {
+      x: (bestPosition.x - current.x) / width,
+      y: (bestPosition.y - current.y) / height,
+    });
+  }
+}
+
 function renderMarkers(matches) {
   const matchingStands = new Set(matches.flatMap(visibleProfileStandNumbers));
   const selectedExhibitor = exhibitors.find((exhibitor) => exhibitor.id === selectedExhibitorId);
@@ -215,8 +278,10 @@ function renderMarkers(matches) {
       const marker = document.createElement("button");
       marker.type = "button";
       marker.className = "map-pin";
-      marker.style.left = `${location.x * 100}%`;
-      marker.style.top = `${location.y * 100}%`;
+      const offset = mapPinOffsets.get(location);
+      if (!offset) throw new Error(`Could not position a marker for booth ${booth.stand}.`);
+      marker.style.left = `${(location.x + offset.x) * 100}%`;
+      marker.style.top = `${(location.y + offset.y) * 100}%`;
       marker.dataset.stand = booth.stand;
       marker.setAttribute("aria-label", `${booth.stand}: ${boothDisplayName(booth)}`);
       marker.title = `${booth.stand} · ${boothDisplayName(booth)}`;
@@ -560,6 +625,7 @@ async function start() {
       : [...new Set(booths.map((booth) => booth.hall))].sort().map((id) => ({ id, label: `Hall ${id}` }));
     updateEventDetails(data, profileData);
     await loadMap(data);
+    positionMapPins();
     setInitialSelectionFromHash();
     render();
   } catch (error) {

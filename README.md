@@ -199,6 +199,10 @@ commit the generated image and JSON together. GitHub Pages uses the repository
 root: in **Settings → Pages**, choose **Deploy from a branch**, select `main`
 and `/(root)`, then save.
 
+With **All halls** selected, searching filters the exhibitor directory without
+restricting map booth selection. Choosing any booth updates its details without
+clearing the search. A hall filter limits map selection to that hall.
+
 ## Share a booth
 
 Select a booth from the map or exhibitor list to update the page URL. To open a

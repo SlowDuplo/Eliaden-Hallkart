@@ -191,15 +191,7 @@ function renderList(matches) {
   }
 }
 
-function renderMarkers(matches) {
-  const matchingStands = new Set(matches.flatMap(visibleProfileStandNumbers));
-  if (!searchInput.value.trim()) {
-    for (const booth of booths) {
-      if (activeHall === "all" || booth.hall === activeHall) {
-        matchingStands.add(booth.stand);
-      }
-    }
-  }
+function renderMarkers() {
   markerLayer.replaceChildren();
 
   for (const booth of booths) {
@@ -222,7 +214,9 @@ function renderMarkers(matches) {
       boothButton.title = `${booth.stand} · ${boothDisplayName(booth)}`;
       const isSelected = booth.stand === selectedStand;
       boothButton.setAttribute("aria-pressed", String(isSelected));
-      if (!matchingStands.has(booth.stand)) boothButton.classList.add("is-filtered");
+      if (activeHall !== "all" && booth.hall !== activeHall) {
+        boothButton.classList.add("is-filtered");
+      }
       if (isSelected) boothButton.classList.add("is-selected");
       boothButton.addEventListener("click", () => selectBooth(booth.stand));
       markerLayer.append(boothButton);
@@ -407,7 +401,7 @@ function render() {
   resultSummary.textContent = `${matches.length} ${matches.length === 1 ? "exhibitor" : "exhibitors"} shown`;
   renderFilters();
   renderList(matches);
-  renderMarkers(matches);
+  renderMarkers();
   renderSelected();
 }
 
